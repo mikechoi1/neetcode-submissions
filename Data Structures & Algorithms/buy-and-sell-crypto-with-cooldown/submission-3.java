@@ -1,0 +1,24 @@
+class Solution {
+    public int maxProfit(int[] prices) {
+        // sub problem: max profit if we start on ith day to end
+        // base case: start on nth day (0 profit for all 3 states)
+        // 3 states: can buy, holding, cooldown
+        int n = prices.length;
+        int[][] dp = new int[3][n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            // state 1: can buy
+            int buy = dp[1][i + 1] - prices[i];
+            int dontBuy = dp[0][i + 1];
+            dp[0][i] = Math.max(buy, dontBuy);
+
+            // state 2: is holding
+            int sell = dp[2][i + 1] + prices[i];
+            int dontSell = dp[1][i + 1];
+            dp[1][i] = Math.max(sell, dontSell);
+
+            // state 3: cooldown
+            dp[2][i] = dp[0][i + 1];
+        }
+        return dp[0][0];
+    }
+}
